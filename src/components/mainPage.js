@@ -1,95 +1,92 @@
 import React from 'react';
+import { useState } from 'react';
 import { Space, Table, Tag } from 'antd';
 import { Button, Form, Input, Select } from 'antd';
 import localListing from './ApiCalls/localListings'
-
-
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
-const { Option } = Select;
-
-
-const onFinish = (values) => {
-  console.log(values);
-  var houseListings = localListing(values);
-  console.log("lisiting", houseListings)
-};
 
 function MainPage() {
   const formRef = React.useRef(null);
   const onReset = () => {
     formRef.current?.resetFields();
+    setData([])
   };
-  
+  const [columns, setColumns] = useState([
+    {
+        "title": "Id",
+        "dataIndex": "id",
+        "key": "id"
+    },
+    {
+        "title": "Full Address",
+        "dataIndex": "fullAddress",
+        "key": "fullAddress"
+    },
+    {
+        "title": "City",
+        "dataIndex": "city",
+        "key": "city"
+    },
+    {
+        "title": "State",
+        "dataIndex": "state",
+        "key": "state"
+    },
+    {
+        "title": "Zip Code",
+        "dataIndex": "zipcode",
+        "key": "zipcode"
+    },
+    {
+        "title": "Home Price",
+        "dataIndex": "homePrice",
+        "key": "homePrice",
+        sorter: (a,b) => a.homePrice - b.homePrice,
+    },
+    {
+        "title": "Property Tax",
+        "dataIndex": "propertyTax",
+        "key": "propertyTax"
+    },
+    {
+        "title": "Insurance",
+        "dataIndex": "insurance",
+        "key": "insurance"
+    },
+    {
+        "title": "Hoa",
+        "dataIndex": "hoa",
+        "key": "hoa",
+    },
+    {
+        "title": "Mortgage",
+        "dataIndex": "mortgage",
+        "key": "mortgage",
+        sorter: (a,b) => a.mortgage - b.mortgage,
+    },
+    {
+        "title": "Rent",
+        "dataIndex": "rent",
+        "key": "rent"
+    },
+    {
+        "title": "Monthly Cash Flow",
+        "dataIndex": "monthlyCashFlow",
+        "key": "monthlyCashFlow",
+        sorter: (a,b) => a.monthlyCashFlow - b.monthlyCashFlow,
+    },
+    {
+        "title": "Break Even Price",
+        "dataIndex": "breakEvenPrice",
+        "key": "breakEvenPrice"
+    }
+])
+  const [data, setData] = useState([])
+
+  const onFinish = async (values) => {
+    var houseListings = await localListing(values);
+    var lists = houseListings.data.data
+    setData(lists)
+  };
     return (
       <div>
       <Form
@@ -169,8 +166,10 @@ function MainPage() {
         </Button>
       </Form.Item>
     </Form>
-    {/* <Table columns={columns} dataSource={data} /> */}
+    <div className="App">
     </div>
+    <Table columns={columns} dataSource={data} /> 
+     </div>
     );
   }
   
