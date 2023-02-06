@@ -1,175 +1,458 @@
 import React from 'react';
-import { useState } from 'react';
-import { Space, Table, Tag } from 'antd';
-import { Button, Form, Input, Select } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import { Button, Input, Form, Space, Table, Modal  } from 'antd';
+import { useRef, useState } from 'react';
 import localListing from './ApiCalls/localListings'
 
+
 function MainPage() {
+  // functions for column data 
   const formRef = React.useRef(null);
   const onReset = () => {
     formRef.current?.resetFields();
     setData([])
   };
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filter
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1890ff' : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <p
+          searchWords={[searchText]}
+          autoEscape
+        />
+      ) : (
+        text
+      ),
+  });
   const [columns, setColumns] = useState([
     {
         "title": "Id",
         "dataIndex": "id",
-        "key": "id"
+        "key": "id",
+        "fixed": "left",
+        "width": 100
     },
     {
         "title": "Full Address",
         "dataIndex": "fullAddress",
-        "key": "fullAddress"
+        "key": "fullAddress",
+        "width": 150
     },
+    {
+      "title": "Zillow URL",
+      "dataIndex": "url",
+      "key": "url",
+      "width": 100
+   },
     {
         "title": "City",
         "dataIndex": "city",
-        "key": "city"
+        "key": "city",
+        ...getColumnSearchProps('age'),
+        "width": 100
     },
     {
         "title": "State",
         "dataIndex": "state",
-        "key": "state"
+        "key": "state",
+        "width": 100
     },
     {
         "title": "Zip Code",
         "dataIndex": "zipcode",
-        "key": "zipcode"
+        "key": "zipcode",
+        "width": 100
     },
     {
         "title": "Home Price",
         "dataIndex": "homePrice",
         "key": "homePrice",
         sorter: (a,b) => a.homePrice - b.homePrice,
+        "width": 100
+    },
+    {
+      "title": "Bedrooms",
+      "dataIndex": "beds",
+      "key": "beds",
+      sorter: (a,b) => a.beds - b.beds,
+      "width": 100
+    },
+    {
+      "title": "Bathrooms",
+      "dataIndex": "baths",
+      "key": "baths",
+      sorter: (a,b) => a.baths - b.baths,
     },
     {
         "title": "Property Tax",
         "dataIndex": "propertyTax",
-        "key": "propertyTax"
+        "key": "propertyTax",
+        "width": 100
     },
     {
         "title": "Insurance",
         "dataIndex": "insurance",
-        "key": "insurance"
-    },
-    {
-        "title": "Hoa",
-        "dataIndex": "hoa",
-        "key": "hoa",
+        "key": "insurance",
+        "width": 100
     },
     {
         "title": "Mortgage",
         "dataIndex": "mortgage",
         "key": "mortgage",
         sorter: (a,b) => a.mortgage - b.mortgage,
+        "width": 100
     },
     {
         "title": "Rent",
         "dataIndex": "rent",
-        "key": "rent"
+        "key": "rent",
+        "width": 100
     },
     {
         "title": "Monthly Cash Flow",
         "dataIndex": "monthlyCashFlow",
         "key": "monthlyCashFlow",
         sorter: (a,b) => a.monthlyCashFlow - b.monthlyCashFlow,
+        "width": 100
     },
     {
         "title": "Break Even Price",
         "dataIndex": "breakEvenPrice",
-        "key": "breakEvenPrice"
+        "key": "breakEvenPrice",
+        "width": 100
     }
 ])
   const [data, setData] = useState([])
 
-  const onFinish = async (values) => {
-    var houseListings = await localListing(values);
-    var lists = houseListings.data.data
-    setData(lists)
+  //functions for searching within table 
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef(null);
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
   };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
+
+  // Modal functions 
+  // const [visible, setVisible] = useState(false);
+  // const [form] = Form.useForm();
+  // const showModal = () => {
+  //   setVisible(true);
+  // }
+  // const handleCancel = () => { 
+  //   setVisible(false) 
+  // };
+
+  // const onFinish = async (values) => {
+  //   console.log(values);
+  //   var houseListings = await localListing(values);
+  //   var lists = houseListings.data.data;
+  //   setData(lists);
+  // };
+
+
+
+
+  // Modal Code
+  const [open, setOpen] = useState(false);
+  const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
+    const [form] = Form.useForm();
     return (
-      <div>
-      <Form
-      ref={formRef}
-      name="control-ref"
-      onFinish={onFinish}
-      style={{
-        maxWidth: 600,
-      }}
-    >
-      <Form.Item
-        name="area"
-        label="Search Area"
-        initialValue={"Atlanta Georgia"}
-        rules={[
-          {
-            required: true,
-          },
-        ]}
+      <Modal
+        open={open}
+        title="Enter Property Details"
+        okText="Create"
+        cancelText="Cancel"
+        onCancel={onCancel}
+        onOk={() => {
+          form
+            .validateFields()
+            .then((values) => {
+              form.resetFields();
+              onCreate(values);
+            })
+            .catch((info) => {
+              console.log('Validate Failed:', info);
+            });
+        }}
       >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="min"
-        label="Min Price"
-        initialValue={"40000"}
-        rules={[
-          {
-            required: true,
-          },
-        ]}
+        <Form
+         form={form}
+         layout="vertical"
+         name="form_in_modal"
+         initialValues={{
+           modifier: 'public',
+         }}
+       >
+          <Form.Item
+            name="area"
+            label="Search Area"
+            initialValue={"Atlanta Georgia"}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="min"
+            label="Min Price"
+            initialValue={"40000"}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+          <Input />
+          </Form.Item>
+          <Form.Item
+            name="max"
+            label="Max Price"
+            initialValue={"700000"}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+          <Input />
+          </Form.Item>
+          <Form.Item
+            name="downpayment"
+            label="Downpayment Percentage"
+            initialValue={"0.25"}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+          <Input />
+          </Form.Item>
+          <Form.Item
+            name="interest"
+            label="Interest Rate"
+            initialValue={"0.0625"}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+          <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+    );
+  };
+  const onCreate = (values) => {
+    console.log(values);
+    setOpen(false);
+    var houseListings = localListing(values);
+    var lists = houseListings.data.data;
+    setData(lists);
+    
+  };
+
+    // main page contents
+    return (
+    <div>
+      <div style={{
+            paddingTop: 20,
+            paddingLeft: 20,
+            paddingBottom: 20,
+          }} >
+      <Button style= {{background: 'white', color: 'black', height: 80, width: 200, fontSize: 16, border: '1px solid black'}}
+        type="primary" 
+        onClick={() => {
+          setOpen(true);
+        }}
       >
-       <Input />
-      </Form.Item>
-      <Form.Item
-        name="max"
-        label="Max Price"
-        initialValue={"700000"}
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
-       <Input />
-      </Form.Item>
-      <Form.Item
-        name="downpayment"
-        label="Downpayment Percentage"
-        initialValue={"0.25"}
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
-       <Input />
-      </Form.Item>
-      <Form.Item
-        name="interest"
-        label="Interest Rate"
-        initialValue={"0.0625"}
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
-       <Input />
-      </Form.Item>
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Search
-        </Button>
-        <Button htmlType="button" onClick={onReset}>
-          Reset
-        </Button>
-      </Form.Item>
-    </Form>
-    <div className="App">
+        Select Property Details
+      </Button>
+      <CollectionCreateForm
+        open={open}
+        onCreate={onCreate}
+        onCancel={() => {
+          setOpen(false);
+        }}
+      />
     </div>
-    <Table columns={columns} dataSource={data} /> 
+      {/* <div className="Modal" style={{
+            paddingTop: 20,
+            paddingLeft: 20,
+            paddingBottom: 20,
+          }}>
+      <Button style= {{height: 80, width: 200, fontSize: 16, border: '1px solid black'}} onClick={showModal}> Select Property Details</Button>
+      <Modal visible={visible} onCancel={handleCancel}
+        onOk={() => {
+          form.submit()
+            .then((values) => {
+              onFinish();
+            })
+        }}
+      > */}
+        {/* <Form ref={formRef}>
+          <Form.Item
+            name="area"
+            label="Search Area"
+            initialValue={"Atlanta Georgia"}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="min"
+            label="Min Price"
+            initialValue={"40000"}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+          <Input />
+          </Form.Item>
+          <Form.Item
+            name="max"
+            label="Max Price"
+            initialValue={"700000"}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+          <Input />
+          </Form.Item>
+          <Form.Item
+            name="downpayment"
+            label="Downpayment Percentage"
+            initialValue={"0.25"}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+          <Input />
+          </Form.Item>
+          <Form.Item
+            name="interest"
+            label="Interest Rate"
+            initialValue={"0.0625"}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+          <Input />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Search 
+            </Button>
+            <Button htmlType="button" onClick={onReset}>
+              Reset
+            </Button>
+          </Form.Item>
+        </Form> */}
+      {/* </Modal> */}
+      {/* </div> */}
+      <div className="App">
+        <Table columns={columns} dataSource={data} scroll= {{x:'max-content'}} /> 
      </div>
+    </div>
     );
   }
   

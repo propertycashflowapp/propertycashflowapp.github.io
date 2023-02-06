@@ -1,9 +1,7 @@
-import './App.css';
 import MainPage from './components/mainPage.js'
-import { FileOutlined, PieChartOutlined, UserOutlined } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import { useState } from 'react';
-const { Header, Content, Footer, Sider } = Layout;
+import { UserOutlined } from '@ant-design/icons';
+import { Layout, Menu } from 'antd';
+const { Header, Content, Sider } = Layout;
 function getItem(label, key, icon, children) {
   return {
     key,
@@ -18,15 +16,10 @@ const items = [
     getItem('Bill', 'bill'),
     getItem('Alex', 'alex'),
   ]),
-  getItem('Files', <FileOutlined />),
   getItem('Saved Properties')
 ];
 
 const App = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
   return (
     <Layout style={{ minHeight: '100vh', }}>
       <Sider>
@@ -42,13 +35,13 @@ const App = () => {
       <Layout className="site-layout">
         <Header
           style={{
-            padding: 0,
-            background: colorBgContainer,
-            fontSize: 25,
-            justifyContent: 'center',
-          }} >
-          Property Cash Flow App
-          </Header>
+            background: 'white',
+            fontSize: 30,
+            color: 'dark navy',
+            textAlign: 'center',
+          }}  >
+         Property Cash Flow
+        </Header>
         <Content >
           <MainPage/>
         </Content>
