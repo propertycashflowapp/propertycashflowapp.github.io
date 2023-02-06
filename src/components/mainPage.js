@@ -125,7 +125,6 @@ function MainPage() {
         "title": "City",
         "dataIndex": "city",
         "key": "city",
-        ...getColumnSearchProps('age'),
         "width": 100
     },
     {
@@ -201,7 +200,7 @@ function MainPage() {
 ])
   const [data, setData] = useState([])
 
-  //functions for searching within table 
+  //functions for searching within table  -> fix not currently working 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
@@ -215,27 +214,7 @@ function MainPage() {
     setSearchText('');
   };
 
-  // Modal functions 
-  // const [visible, setVisible] = useState(false);
-  // const [form] = Form.useForm();
-  // const showModal = () => {
-  //   setVisible(true);
-  // }
-  // const handleCancel = () => { 
-  //   setVisible(false) 
-  // };
-
-  // const onFinish = async (values) => {
-  //   console.log(values);
-  //   var houseListings = await localListing(values);
-  //   var lists = houseListings.data.data;
-  //   setData(lists);
-  // };
-
-
-
-
-  // Modal Code
+  // Modal functions
   const [open, setOpen] = useState(false);
   const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
     const [form] = Form.useForm();
@@ -363,92 +342,6 @@ function MainPage() {
         }}
       />
     </div>
-      {/* <div className="Modal" style={{
-            paddingTop: 20,
-            paddingLeft: 20,
-            paddingBottom: 20,
-          }}>
-      <Button style= {{height: 80, width: 200, fontSize: 16, border: '1px solid black'}} onClick={showModal}> Select Property Details</Button>
-      <Modal visible={visible} onCancel={handleCancel}
-        onOk={() => {
-          form.submit()
-            .then((values) => {
-              onFinish();
-            })
-        }}
-      > */}
-        {/* <Form ref={formRef}>
-          <Form.Item
-            name="area"
-            label="Search Area"
-            initialValue={"Atlanta Georgia"}
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="min"
-            label="Min Price"
-            initialValue={"40000"}
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-          <Input />
-          </Form.Item>
-          <Form.Item
-            name="max"
-            label="Max Price"
-            initialValue={"700000"}
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-          <Input />
-          </Form.Item>
-          <Form.Item
-            name="downpayment"
-            label="Downpayment Percentage"
-            initialValue={"0.25"}
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-          <Input />
-          </Form.Item>
-          <Form.Item
-            name="interest"
-            label="Interest Rate"
-            initialValue={"0.0625"}
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-          <Input />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Search 
-            </Button>
-            <Button htmlType="button" onClick={onReset}>
-              Reset
-            </Button>
-          </Form.Item>
-        </Form> */}
-      {/* </Modal> */}
-      {/* </div> */}
       <div className="App">
         <Table columns={columns} dataSource={data} scroll= {{x:'max-content'}} /> 
      </div>
