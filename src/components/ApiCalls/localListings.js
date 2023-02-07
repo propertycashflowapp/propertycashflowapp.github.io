@@ -3,8 +3,9 @@ import axios from "axios";
 
 async function localListings(parameters) {
     console.log(parameters)
+    const prefix = 'http://18.191.147.136' // 'http://127.0.0.1:80'
     try {
-        let url = new URL('http://18.191.147.136/get-listings')
+        let url = new URL(`${prefix}/get-listings`)
         const params = {
             searchTerm: parameters.area,
             minPrice: parameters.min,
@@ -12,10 +13,16 @@ async function localListings(parameters) {
             downPaymentPercent: parameters.downpayment,
             interestRate: parameters.interest,
         };
+        const config = {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            },
+        };
         for (const [key, value] of Object.entries(params)) {
             url.searchParams.append(key, value);
         }
-        const res = await axios.get(url);
+        const res = await axios.get(url, config);
         console.log("res:", res);
         return res;
     }

@@ -309,11 +309,11 @@ function MainPage() {
       </Modal>
     );
   };
-  const onCreate = (values) => {
+  const onCreate = async (values) => {
     console.log(values);
     setOpen(false);
-    var houseListings = localListing(values);
-    var lists = houseListings.data.data;
+    var houseListings = await localListing(values);
+    var lists = houseListings?.data?.data;
     setData(lists);
     
   };
