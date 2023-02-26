@@ -3,7 +3,7 @@ import axios from "axios";
 
 async function localListings(parameters) {
     console.log(parameters)
-    const prefix = 'http://18.191.147.136' // 'http://127.0.0.1:80'
+    const prefix = 'https://api.propapp.dev' // 'http://127.0.0.1:80'
     try {
         let url = new URL(`${prefix}/get-listings`)
         const params = {
