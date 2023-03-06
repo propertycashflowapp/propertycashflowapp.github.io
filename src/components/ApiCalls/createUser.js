@@ -1,16 +1,14 @@
 import axios from "axios";
 
-async function localListings(parameters) {
+async function createUser(parameters) {
     console.log(parameters)
-    const prefix = 'https://api.propapp.dev' // 'http://127.0.0.1:80'
+    const prefix = 'http://18.191.147.136' // 'http://127.0.0.1:80'
     try {
-        let url = new URL(`${prefix}/get-listings`)
+        let url = new URL(`${prefix}/create-user`)
         const params = {
-            searchTerm: parameters.area,
-            minPrice: parameters.min,
-            maxPrice:parameters.max,
-            downPaymentPercent: parameters.downpayment,
-            interestRate: parameters.interest,
+            email: parameters.email,
+            name: parameters.name,
+            password:parameters.password,
         };
         const config = {
             headers: {
@@ -29,4 +27,4 @@ async function localListings(parameters) {
         console.log(error);
     }
 };
-export default localListings;
+export default createUser;
