@@ -24,8 +24,6 @@ const items = [
   getItem('Saved Properties')
 ];
 
-
-
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userName, setUserName] = useState('')
@@ -48,8 +46,7 @@ const App = () => {
             fontSize: 30,
             color: 'dark navy',
             textAlign: 'center',
-          }}  >
-         Property Cash Flow
+          }}  > Property Cash Flow
         </Header>
         <Content >
           {!isLoggedIn ? (<LoginPage setIsLoggedIn={setIsLoggedIn} setUserName={setUserName} />) : (<MainPage userName={userName} /> )}
