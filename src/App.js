@@ -1,7 +1,11 @@
 import MainPage from './components/mainPage.js'
+import LoginPage from './components/loginPage.js';
 import { UserOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
+import { useState } from 'react';
+
 const { Header, Content, Sider } = Layout;
+
 function getItem(label, key, icon, children) {
   return {
     key,
@@ -10,6 +14,7 @@ function getItem(label, key, icon, children) {
     label,
   };
 }
+
 const items = [
   getItem('User', 'sub1', <UserOutlined />, [
     getItem('Tom', 'tom'),
@@ -19,7 +24,11 @@ const items = [
   getItem('Saved Properties')
 ];
 
+
+
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [userName, setUserName] = useState('')
   return (
     <Layout style={{ minHeight: '100vh', }}>
       <Sider>
@@ -43,7 +52,7 @@ const App = () => {
          Property Cash Flow
         </Header>
         <Content >
-          <MainPage/>
+          {!isLoggedIn ? (<LoginPage setIsLoggedIn={setIsLoggedIn} setUserName={setUserName} />) : (<MainPage userName={userName} /> )}
         </Content>
       </Layout>
     </Layout>

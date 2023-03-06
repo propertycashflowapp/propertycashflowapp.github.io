@@ -5,7 +5,7 @@ import { useRef, useState } from 'react';
 import localListing from './ApiCalls/localListings'
 
 
-function MainPage() {
+function MainPage(props) {
   // functions for column data 
   const formRef = React.useRef(null);
   const onReset = () => {
@@ -313,9 +313,9 @@ function MainPage() {
     console.log(values);
     setOpen(false);
     var houseListings = await localListing(values);
+    console.log(houseListings)
     var lists = houseListings?.data?.data;
     setData(lists);
-    
   };
 
     // main page contents
@@ -326,6 +326,7 @@ function MainPage() {
             paddingLeft: 20,
             paddingBottom: 20,
           }} >
+      <p> Hello {props.userName} </p>
       <Button style= {{background: 'white', color: 'black', height: 80, width: 200, fontSize: 16, border: '1px solid black'}}
         type="primary" 
         onClick={() => {
