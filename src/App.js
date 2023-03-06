@@ -3,9 +3,7 @@ import LoginPage from './components/loginPage.js';
 import { UserOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { useState } from 'react';
-
 const { Header, Content, Sider } = Layout;
-
 function getItem(label, key, icon, children) {
   return {
     key,
@@ -46,7 +44,8 @@ const App = () => {
             fontSize: 30,
             color: 'dark navy',
             textAlign: 'center',
-          }}  > Property Cash Flow
+          }} >
+         Property Cash Flow
         </Header>
         <Content >
           {!isLoggedIn ? (<LoginPage setIsLoggedIn={setIsLoggedIn} setUserName={setUserName} />) : (<MainPage userName={userName} /> )}
