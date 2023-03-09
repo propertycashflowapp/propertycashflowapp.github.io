@@ -3,6 +3,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Form, Space, Table, Modal  } from 'antd';
 import { useRef, useState } from 'react';
 import localListing from './ApiCalls/localListings'
+import saveProperties from './ApiCalls/saveProperties'
 
 
 function MainPage(props) {
@@ -104,8 +105,8 @@ function MainPage(props) {
   const [columns, setColumns] = useState([
     {
         "title": "Id",
-        "dataIndex": "id",
-        "key": "id",
+        "dataIndex": "key",
+        "key": "key",
         "fixed": "left",
         "width": 100
     },
@@ -318,6 +319,28 @@ function MainPage(props) {
     setData(lists);
   };
 
+  // code for selecting rows 
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const saveChosenProperties = () => {
+    saveProperties(selectedRowKeys)
+    setLoading(true);
+    // ajax request after empty completing
+    setTimeout(() => {
+      setSelectedRowKeys([]);
+      setLoading(false);
+    }, 1000);
+  };
+  const onSelectChange = (newSelectedRowKeys) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+  const hasSelected = selectedRowKeys.length > 0;
+
     // main page contents
     return (
     <div>
@@ -344,7 +367,22 @@ function MainPage(props) {
       />
     </div>
       <div className="App">
-        <Table columns={columns} dataSource={data} scroll= {{x:'max-content'}} /> 
+      <Button type="primary" onClick={saveChosenProperties} disabled={!hasSelected} loading={loading}>
+          Save Selected Properties
+        </Button>
+        <span
+          style={{
+            marginLeft: 8,
+          }}
+        >
+          {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
+        </span>
+        <Table 
+            rowSelection={rowSelection}
+          columns={columns} 
+          dataSource={data} 
+          scroll= {{x:'max-content'}} 
+        /> 
      </div>
     </div>
     );
