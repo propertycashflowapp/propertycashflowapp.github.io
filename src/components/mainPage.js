@@ -311,10 +311,8 @@ function MainPage(props) {
     );
   };
   const onCreate = async (values) => {
-    console.log(values);
     setOpen(false);
     var houseListings = await localListing(values);
-    console.log(houseListings)
     var lists = houseListings?.data?.data;
     setData(lists);
   };
@@ -323,7 +321,7 @@ function MainPage(props) {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [loading, setLoading] = useState(false);
   const saveChosenProperties = () => {
-    saveProperties(selectedRowKeys)
+    saveProperties(props.userId, selectedRowKeys)
     setLoading(true);
     // ajax request after empty completing
     setTimeout(() => {
@@ -332,7 +330,6 @@ function MainPage(props) {
     }, 1000);
   };
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
@@ -350,6 +347,7 @@ function MainPage(props) {
             paddingBottom: 20,
           }} >
       <p> Hello {props.userName} </p>
+      <p> Your User Id is: {props.userId} </p>
       <Button style= {{background: 'white', color: 'black', height: 80, width: 200, fontSize: 16, border: '1px solid black'}}
         type="primary" 
         onClick={() => {

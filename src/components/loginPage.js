@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Form, Input, Button, Modal } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons'; 
 import createUser from './ApiCalls/createUser';
+import verifyLogin from './ApiCalls/verifyLogin';
 
 function LoginPage(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,17 +16,16 @@ function LoginPage(props) {
   };
 
   const onCreate = async (values) => {
-    console.log("here creating user ")
-    console.log(values);
     var status = await createUser(values);
-    console.log(status)
   };
 
-  const onFinish = values => {
-    if (values.username === 'test' && values.password === 'test'){
-      console.log("SUCCESS")
+  const onFinish = async values => {
+    const loginResult = await verifyLogin(values);
+    const data = loginResult.data._id
+    if (loginResult.status === 200){
       props.setIsLoggedIn(true)
       props.setUserName(values.username)
+      props.setUserId(data.$oid)
       }
     }
   return (
@@ -78,7 +78,6 @@ function LoginPage(props) {
               form
                 .validateFields()
                 .then((values) => {
-                  console.log(values)
                   onCreate(values)
                   form.resetFields();
                 })

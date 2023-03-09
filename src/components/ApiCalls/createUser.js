@@ -2,13 +2,15 @@ import axios from "axios";
 
 async function createUser(parameters) {
     console.log(parameters)
-    const prefix = 'http://18.191.147.136' // 'http://127.0.0.1:80'
+    const prefix = 'https://api.propapp.dev'
+    //'http://127.0.0.1:5000'
+    //'https://api.propapp.dev' // 'http://127.0.0.1:80'
     try {
         let url = new URL(`${prefix}/create-user`)
         const params = {
             email: parameters.email,
             name: parameters.name,
-            password:parameters.password,
+            password: parameters.createPassword,
         };
         const config = {
             headers: {
@@ -20,7 +22,7 @@ async function createUser(parameters) {
             url.searchParams.append(key, value);
         }
         const res = await axios.get(url, config);
-        console.log("res:", res);
+        console.log("RESULT of USER:", res);
         return res;
     }
     catch (error) {

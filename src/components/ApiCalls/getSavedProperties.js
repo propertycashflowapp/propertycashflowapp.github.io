@@ -1,18 +1,14 @@
 import axios from "axios";
 
-async function localListings(parameters) {
-    console.log(parameters)
-    const prefix = 'https://api.propapp.dev' 
-    //'http://127.0.0.1:5000'
+async function getSavedProperties(parameters) {
+    console.log("Saved parameters", parameters)
+    const prefix = 'https://api.propapp.dev'
+   // 'http://127.0.0.1:5000'
    // 'https://api.propapp.dev' 
     try {
-        let url = new URL(`${prefix}/get-listings`)
+        let url = new URL(`${prefix}/get-saved-properties`)
         const params = {
-            searchTerm: parameters.area,
-            minPrice: parameters.min,
-            maxPrice:parameters.max,
-            downPaymentPercent: parameters.downpayment,
-            interestRate: parameters.interest,
+            user_id: parameters
         };
         const config = {
             headers: {
@@ -31,4 +27,4 @@ async function localListings(parameters) {
         console.log(error);
     }
 };
-export default localListings;
+export default getSavedProperties;
