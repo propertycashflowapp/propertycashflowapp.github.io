@@ -1,10 +1,15 @@
 import axios from "axios";
 
-async function saveProperties(parameters) {
-    const prefix = 'http://18.191.147.136' // 'http://127.0.0.1:80'
+async function saveProperties(user_id, parameters) {
+    const prefix = 'https://api.propapp.dev' 
+    //'http://127.0.0.1:5000'
+    // 'https://api.propapp.dev' 
     try {
         let url = new URL(`${prefix}/saved-properties`)
-        const body = { selected_ids: parameters }
+        const body = { 
+            user_id: user_id,
+            selected_ids: parameters
+        }
         const config = {
             headers: {
                 'Access-Control-Allow-Origin': '*',

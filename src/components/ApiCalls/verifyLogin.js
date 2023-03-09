@@ -1,18 +1,15 @@
 import axios from "axios";
 
-async function localListings(parameters) {
-    console.log(parameters)
-    const prefix = 'https://api.propapp.dev' 
+async function verifyLogin(parameters) {
+    console.log("Parameters:", parameters)
+    const prefix = 'https://api.propapp.dev'
     //'http://127.0.0.1:5000'
-   // 'https://api.propapp.dev' 
+    //'https://api.propapp.dev' // 'http://127.0.0.1:80'
     try {
-        let url = new URL(`${prefix}/get-listings`)
+        let url = new URL(`${prefix}/verify-login`)
         const params = {
-            searchTerm: parameters.area,
-            minPrice: parameters.min,
-            maxPrice:parameters.max,
-            downPaymentPercent: parameters.downpayment,
-            interestRate: parameters.interest,
+            username: parameters.username,
+            password: parameters.password,
         };
         const config = {
             headers: {
@@ -24,11 +21,11 @@ async function localListings(parameters) {
             url.searchParams.append(key, value);
         }
         const res = await axios.get(url, config);
-        console.log("res:", res);
+        console.log("RESULT of verify login:", res);
         return res;
     }
     catch (error) {
         console.log(error);
     }
 };
-export default localListings;
+export default verifyLogin;
