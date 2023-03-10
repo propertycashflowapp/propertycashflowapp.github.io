@@ -1,108 +1,14 @@
 import React from 'react';
-import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Form, Space, Table, Modal  } from 'antd';
-import { useRef, useState } from 'react';
+import { Button, Input, Form, Table, Modal  } from 'antd';
+import { useState } from 'react';
+
+import GetColumnSearchProps from './GetColumnSearchProps'
 import localListing from './ApiCalls/localListings'
 import saveProperties from './ApiCalls/saveProperties'
-
+import Highlighter from 'react-highlight-words';
 
 function MainPage(props) {
-  // functions for column data 
-  const formRef = React.useRef(null);
-  const onReset = () => {
-    formRef.current?.resetFields();
-    setData([])
-  };
-  const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-      <div
-        style={{
-          padding: 8,
-        }}
-        onKeyDown={(e) => e.stopPropagation()}
-      >
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: 'block',
-          }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? '#1890ff' : undefined,
-        }}
-      />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <p
-          searchWords={[searchText]}
-          autoEscape
-        />
-      ) : (
-        text
-      ),
-  });
-  const [columns, setColumns] = useState([
+  const [columns] = useState([
     {
         "title": "Id",
         "dataIndex": "key",
@@ -114,7 +20,10 @@ function MainPage(props) {
         "title": "Full Address",
         "dataIndex": "fullAddress",
         "key": "fullAddress",
-        "width": 150
+        "width": 150,
+        ...GetColumnSearchProps(
+          'fullAddress'
+        )
     },
     {
       "title": "Zillow URL",
@@ -126,7 +35,9 @@ function MainPage(props) {
         "title": "City",
         "dataIndex": "city",
         "key": "city",
-        "width": 100
+        "width": 100,
+        ...GetColumnSearchProps(
+          'city')
     },
     {
         "title": "State",
@@ -138,7 +49,8 @@ function MainPage(props) {
         "title": "Zip Code",
         "dataIndex": "zipcode",
         "key": "zipcode",
-        "width": 100
+        "width": 100,
+        ...GetColumnSearchProps('zipcode')
     },
     {
         "title": "Home Price",
@@ -198,22 +110,8 @@ function MainPage(props) {
         "key": "breakEvenPrice",
         "width": 100
     }
-])
+  ])
   const [data, setData] = useState([])
-
-  //functions for searching within table  -> fix not currently working 
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const searchInput = useRef(null);
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
-  const handleReset = (clearFilters) => {
-    clearFilters();
-    setSearchText('');
-  };
 
   // Modal functions
   const [open, setOpen] = useState(false);
@@ -348,6 +246,12 @@ function MainPage(props) {
           }} >
       <p> Hello {props.userName} </p>
       <p> Your User Id is: {props.userId} </p>
+      <Highlighter
+        highlightClassName="YourHighlightClass"
+        searchWords={["and", "or", "the"]}
+        autoEscape={true}
+        textToHighlight="The dog is chasing the cat. Or perhaps they're just playing?"
+      />
       <Button style= {{background: 'white', color: 'black', height: 80, width: 200, fontSize: 16, border: '1px solid black'}}
         type="primary" 
         onClick={() => {
