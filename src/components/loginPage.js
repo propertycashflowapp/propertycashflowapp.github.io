@@ -6,6 +6,41 @@ import createUser from './ApiCalls/createUser';
 import verifyLogin from './ApiCalls/verifyLogin';
 
 function LoginPage(props) {
+
+  // functions for generating messages for login
+  // code for success and failure pop-ups
+  const loadingIcon = () => {
+    messageApi.open({
+      type: 'loading',
+      content: 'Action in progress..',
+      duration: 0,
+    });
+    // Dismiss manually and asynchronously
+    setTimeout(messageApi.destroy, 2500);
+  };
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'This is a success message',
+    });
+  };
+
+  const error = () => {
+    messageApi.open({
+      type: 'error',
+      content: 'This is an error message',
+    });
+  };
+
+  const warning = () => {
+    messageApi.open({
+      type: 'warning',
+      content: 'This is a warning message',
+    });
+  };
+
+
+  // functions for modal opening/closing
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const showModal = () => {
