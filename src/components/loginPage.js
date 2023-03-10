@@ -1,41 +1,41 @@
 import React from 'react';
 import { useState } from 'react';
-import { Form, Input, Button, Modal } from 'antd';
+import { Form, Input, Button, Modal, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons'; 
 import createUser from './ApiCalls/createUser';
 import verifyLogin from './ApiCalls/verifyLogin';
 
 function LoginPage(props) {
-
   // functions for generating messages for login
+  const [messageApi, contextHolder] = message.useMessage();
   // code for success and failure pop-ups
-  const loadingIcon = () => {
+  const loadingIcon = (message) => {
     messageApi.open({
       type: 'loading',
-      content: 'Action in progress..',
+      content: message,
       duration: 0,
     });
     // Dismiss manually and asynchronously
     setTimeout(messageApi.destroy, 2500);
   };
-  const success = () => {
+  const success = (message) => {
     messageApi.open({
       type: 'success',
-      content: 'This is a success message',
+      content: message,
     });
   };
 
-  const error = () => {
+  const error = (message) => {
     messageApi.open({
       type: 'error',
-      content: 'This is an error message',
+      content: message,
     });
   };
 
-  const warning = () => {
+  const warning = (message) => {
     messageApi.open({
       type: 'warning',
-      content: 'This is a warning message',
+      content: message,
     });
   };
 
@@ -56,16 +56,27 @@ function LoginPage(props) {
   };
 
   const onFinish = async values => {
+    loadingIcon("Loggin You In..");
     const loginResult = await verifyLogin(values);
-    const data = loginResult.data._id
     if (loginResult.status === 200){
-      props.setIsLoggedIn(true)
-      props.setUserName(values.username)
-      props.setUserId(data.$oid)
+      const data = loginResult.data
+      if (data === null){
+        warning("user not found- check credentials")
+      }
+      else {
+        const dataId = loginResult.data._id;
+        props.setIsLoggedIn(true);
+        props.setUserName(values.username);
+        props.setUserId(dataId.$oid);
       }
     }
+    else {
+      error("you have entered the wrong password");
+    }
+  }
   return (
     <div style={{width: '70%', paddingTop: '5%', paddingLeft: '5%' }}>
+    {contextHolder}
     <Form
       name="normal_login"
       className="login-form"
