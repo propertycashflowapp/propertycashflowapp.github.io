@@ -17,6 +17,7 @@ function LoginPage(props) {
 
   const onCreate = async (values) => {
     var status = await createUser(values);
+    console.log(status);
   };
 
   const onFinish = async values => {
