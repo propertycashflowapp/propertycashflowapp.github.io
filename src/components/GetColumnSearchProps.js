@@ -1,32 +1,30 @@
-import React from "react";
-import { Button, Space, Input } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
-import Highlighter from "react-highlight-words";
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react'
+import { Button, Space, Input } from 'antd'
+import { SearchOutlined } from '@ant-design/icons'
+import Highlighter from 'react-highlight-words'
 
-//functions for searching within table 
+// functions for searching within table
 const GetColumnSearchProps = (dataIndex) => {
-        
-    const [searchedColumn, setSearchedColumn] = useState('');
-    const [searchText, setSearchText] = useState('');
-    const searchInput = useRef(null);
-    
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-        confirm();
-        setSearchText(selectedKeys[0]);
-        setSearchedColumn(dataIndex);
-    };
-    
-    const handleReset = (clearFilters) => {
-        clearFilters();
-        setSearchText('');
-    };
-    
-    return {
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+  const [searchedColumn, setSearchedColumn] = useState('')
+  const [searchText, setSearchText] = useState('')
+  const searchInput = useRef(null)
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm()
+    setSearchText(selectedKeys[0])
+    setSearchedColumn(dataIndex)
+  }
+
+  const handleReset = (clearFilters) => {
+    clearFilters()
+    setSearchText('')
+  }
+
+  return {
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
         <div
             style={{
-            padding: 8,
+              padding: 8
             }}
             onKeyDown={(e) => e.stopPropagation()}
         >
@@ -37,8 +35,8 @@ const GetColumnSearchProps = (dataIndex) => {
             onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
             onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
             style={{
-                marginBottom: 8,
-                display: 'block',
+              marginBottom: 8,
+              display: 'block'
             }}
             />
             <Space>
@@ -48,7 +46,7 @@ const GetColumnSearchProps = (dataIndex) => {
                 icon={<SearchOutlined />}
                 size="small"
                 style={{
-                width: 90,
+                  width: 90
                 }}
             >
                 Search
@@ -57,7 +55,7 @@ const GetColumnSearchProps = (dataIndex) => {
                 onClick={() => clearFilters && handleReset(clearFilters)}
                 size="small"
                 style={{
-                width: 90,
+                  width: 90
                 }}
             >
                 Reset
@@ -66,11 +64,11 @@ const GetColumnSearchProps = (dataIndex) => {
                 type="link"
                 size="small"
                 onClick={() => {
-                confirm({
-                    closeDropdown: false,
-                });
-                setSearchText(selectedKeys[0]);
-                setSearchedColumn(dataIndex);
+                  confirm({
+                    closeDropdown: false
+                  })
+                  setSearchText(selectedKeys[0])
+                  setSearchedColumn(dataIndex)
                 }}
             >
                 Filter
@@ -79,42 +77,44 @@ const GetColumnSearchProps = (dataIndex) => {
                 type="link"
                 size="small"
                 onClick={() => {
-                close();
+                  close()
                 }}
             >
                 close
             </Button>
             </Space>
         </div>
-        ),
-        filterIcon: (filtered) => (
+    ),
+    filterIcon: (filtered) => (
         <SearchOutlined
             style={{
-            color: filtered ? '#1890ff' : undefined,
+              color: filtered ? '#1890ff' : undefined
             }}
         />
-        ),
-        onFilter: (value, record) =>
-        record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-        onFilterDropdownOpenChange: (visible) => {
-        if (visible) {
-            setTimeout(() => searchInput.current?.select(), 100);
-        }
-        },
-        render: (text) =>
-      searchedColumn === dataIndex ? (
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100)
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex
+        ? (
         <Highlighter
           highlightStyle={{
             backgroundColor: '#ffc069',
-            padding: 0,
+            padding: 0
           }}
           searchWords={[searchText]}
           autoEscape
           textToHighlight={text ? text.toString() : ''}
         />
-      ) : (
-        text
-      ),
-  };
+          )
+        : (
+            text
+          )
+  }
 }
 export default GetColumnSearchProps
