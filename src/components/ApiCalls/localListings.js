@@ -18,7 +18,7 @@ async function localListings (parameters) {
       minYearBuilt: parameters.minYearBuilt,
       maxYearBuilt: parameters.maxYearBuilt,
       maxHoa: parameters.maxHoa,
-      singleStory: parameters.disabled,
+      singleStory: parameters.singleStoryOnly,
       downPaymentPercent: parameters.downpayment,
       interestRate: parameters.interest
     }

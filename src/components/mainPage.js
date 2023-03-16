@@ -111,15 +111,18 @@ function MainPage (props) {
     }
   ])
   const [data, setData] = useState([])
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
 
   // Modal functions
   const [open, setOpen] = useState(false)
-  const onChange = (e) => {
-    setShowAdvancedFilters(e.target.checked)
-  }
+
   const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
     const [form] = Form.useForm()
+    const onChange = (e) => {
+      form.setFieldsValue({
+        isCheckedInput: `${e.target.checked}`
+      })
+      console.log(`checked = ${e.target.checked}`)
+    }
     return (
       <Modal
         open={open}
@@ -165,223 +168,235 @@ function MainPage (props) {
               marginBottom: 0
             }}
           >
-          <Form.Item
-            name="downpayment"
-            label="Down Payment Percentage"
-            rules={[
-              {
-                required: true
-              }
-            ]}
-            style={{
-              display: 'inline-block',
-              width: 'calc(50% - 8px)'
-            }}
-          >
-            <Input placeholder="Input down payment percentage" />
-          </Form.Item>
-          <Form.Item
-            name="interest"
-            label="Interest Rate"
-            rules={[
-              {
-                required: true
-              }
-            ]}
-            style={{
-              display: 'inline-block',
-              width: 'calc(50% - 8px)',
-              margin: '0 8px'
-            }}
-          >
-            <Input placeholder="Input interest rate" />
-          </Form.Item>
-          </Form.Item>
-          <Form.Item name="disabled">
-            <Checkbox checked={showAdvancedFilters} onChange={onChange}>Show advanced filters</Checkbox>
-          </Form.Item>
-          <Form.Item
-            name="price"
-            style={{
-              marginBottom: 0,
-              display: showAdvancedFilters ? 'block' : 'none'
-            }}
-          >
             <Form.Item
-              name="minPrice"
-              label="Min Price"
+              name="downpayment"
+              label="Down Payment Percentage"
               rules={[
                 {
-                  required: false
+                  required: true
                 }
               ]}
               style={{
-                display: showAdvancedFilters ? 'inline-block' : 'none',
+                display: 'inline-block',
                 width: 'calc(50% - 8px)'
               }}
             >
-              <Input placeholder="Input min price" />
+              <Input placeholder="Input down payment percentage" />
             </Form.Item>
             <Form.Item
-              name="maxPrice"
-              label="Max Price"
+              name="interest"
+              label="Interest Rate"
               rules={[
                 {
-                  required: false
+                  required: true
                 }
               ]}
               style={{
-                display: showAdvancedFilters ? 'inline-block' : 'none',
+                display: 'inline-block',
                 width: 'calc(50% - 8px)',
                 margin: '0 8px'
               }}
             >
-              <Input placeholder="Input max price" />
+              <Input placeholder="Input interest rate" />
             </Form.Item>
           </Form.Item>
           <Form.Item
-            name="maxHoa"
-            label="Max Hoa"
-            rules={[
-              {
-                required: false
-              }
-            ]}
+            name="isCheckedInput"
             style={{
-              display: showAdvancedFilters ? 'block' : 'none'
+              display: 'none'
             }}
           >
-            <Input placeholder="Input max hoa" />
+            <Input/>
+          </Form.Item>
+          <Form.Item name="showAdvancedFilters">
+            <Checkbox onChange={onChange}>Show advanced filters</Checkbox>
           </Form.Item>
           <Form.Item
-            name="disabled"
-            valuePropName="checked"
-            style={{
-              display: showAdvancedFilters ? 'block' : 'none'
-            }}
+            noStyle
+            shouldUpdate={(prevValues, currentValues) => prevValues.showAdvancedFilters !== currentValues.showAdvancedFilters}
           >
-              <Checkbox style={{
-                display: showAdvancedFilters ? 'inline' : 'none'
-              }}>
-                Single story only
-              </Checkbox>
-          </Form.Item>
-          <Form.Item
-              name="bedrooms"
-              style={{
-                marginBottom: 0,
-                display: showAdvancedFilters ? 'block' : 'none'
-              }}
-            >
-              <Form.Item
-                name="minBedrooms"
-                label="Min Bedrooms"
-                rules={[
-                  {
-                    required: false
-                  }
-                ]}
-                style={{
-                  display: showAdvancedFilters ? 'inline-block' : 'none',
-                  width: 'calc(50% - 8px)'
-                }}
-              >
-                <Input placeholder="Input min bedrooms" />
-              </Form.Item>
-              <Form.Item
-                name="maxBedrooms"
-                label="Max Bedrooms"
-                rules={[
-                  {
-                    required: false
-                  }
-                ]}
-                style={{
-                  display: showAdvancedFilters ? 'inline-block' : 'none',
-                  width: 'calc(50% - 8px)',
-                  margin: '0 8px'
-                }}
-              >
-                <Input placeholder="Input max bedrooms" />
-              </Form.Item>
-          </Form.Item>
-          <Form.Item
-              name="bathrooms"
-              style={{
-                marginBottom: 0,
-                display: showAdvancedFilters ? 'block' : 'none'
-              }}
-            >
-              <Form.Item
-                name="minBathrooms"
-                label="Min Bathrooms"
-                rules={[
-                  {
-                    required: false
-                  }
-                ]}
-                style={{
-                  display: showAdvancedFilters ? 'inline-block' : 'none',
-                  width: 'calc(50% - 8px)'
-                }}
-              >
-                <Input placeholder="Input min bathrooms" />
-              </Form.Item>
-              <Form.Item
-                name="maxBathrooms"
-                label="Max Bathrooms"
-                rules={[
-                  {
-                    required: false
-                  }
-                ]}
-                style={{
-                  display: showAdvancedFilters ? 'inline-block' : 'none',
-                  width: 'calc(50% - 8px)',
-                  margin: '0 8px'
-                }}
-              >
-                <Input placeholder="Input max bathrooms" />
-              </Form.Item>
-          </Form.Item>
-          <Form.Item
-              name="yearBuilt"
-              style={{
-                marginBottom: 0,
-                display: showAdvancedFilters ? 'block' : 'none'
-              }}
-            >
-              <Form.Item
-                name="minYearBuilt"
-                label="Min Year Built"
-                rules={[
-                  {
-                    required: false
-                  }
-                ]}
-                style={{
-                  display: showAdvancedFilters ? 'inline-block' : 'none',
-                  width: 'calc(50% - 8px)'
-                }}
-              >
-                <Input placeholder="Input min year built" />
-              </Form.Item>
-              <Form.Item
-                name="maxYearBuilt"
-                label="Max Year Built"
-                rules={[
-                  {
-                    required: false
-                  }
-                ]}
-                style={{
-                  display: showAdvancedFilters ? 'inline-block' : 'none',
-                  width: 'calc(50% - 8px)',
-                  margin: '0 8px'
-                }}
-              >
-                <Input placeholder="Input max year built" />
-              </Form.Item>
+            {({ getFieldValue }) =>
+              getFieldValue('isCheckedInput') === 'true'
+                ? (
+            <><Form.Item
+                    name="price"
+                    style={{
+                      marginBottom: 0,
+                      display: 'block'
+                    }}
+                  >
+                    <Form.Item
+                      name="minPrice"
+                      label="Min Price"
+                      rules={[
+                        {
+                          required: false
+                        }
+                      ]}
+                      style={{
+                        display: 'inline-block',
+                        width: 'calc(50% - 8px)'
+                      }}
+                    >
+                      <Input placeholder="Input min price" />
+                    </Form.Item>
+                    <Form.Item
+                      name="maxPrice"
+                      label="Max Price"
+                      rules={[
+                        {
+                          required: false
+                        }
+                      ]}
+                      style={{
+                        display: 'inline-block',
+                        width: 'calc(50% - 8px)',
+                        margin: '0 8px'
+                      }}
+                    >
+                      <Input placeholder="Input max price" />
+                    </Form.Item>
+                  </Form.Item><Form.Item
+                    name="maxHoa"
+                    label="Max Hoa"
+                    rules={[
+                      {
+                        required: false
+                      }
+                    ]}
+                    style={{
+                      display: 'block'
+                    }}
+                  >
+                      <Input placeholder="Input max hoa" />
+                    </Form.Item><Form.Item
+                      name="singleStoryOnly"
+                      valuePropName="checked"
+                      style={{
+                        display: 'block'
+                      }}
+                    >
+                      <Checkbox>
+                        Single story only
+                      </Checkbox>
+                    </Form.Item><Form.Item
+                      name="bedrooms"
+                      style={{
+                        marginBottom: 0,
+                        display: 'block'
+                      }}
+                    >
+                      <Form.Item
+                        name="minBedrooms"
+                        label="Min Bedrooms"
+                        rules={[
+                          {
+                            required: false
+                          }
+                        ]}
+                        style={{
+                          display: 'inline-block',
+                          width: 'calc(50% - 8px)'
+                        }}
+                      >
+                        <Input placeholder="Input min bedrooms" />
+                      </Form.Item>
+                      <Form.Item
+                        name="maxBedrooms"
+                        label="Max Bedrooms"
+                        rules={[
+                          {
+                            required: false
+                          }
+                        ]}
+                        style={{
+                          display: 'inline-block',
+                          width: 'calc(50% - 8px)',
+                          margin: '0 8px'
+                        }}
+                      >
+                        <Input placeholder="Input max bedrooms" />
+                      </Form.Item>
+                    </Form.Item><Form.Item
+                      name="bathrooms"
+                      style={{
+                        marginBottom: 0,
+                        display: 'block'
+                      }}
+                    >
+                      <Form.Item
+                        name="minBathrooms"
+                        label="Min Bathrooms"
+                        rules={[
+                          {
+                            required: false
+                          }
+                        ]}
+                        style={{
+                          display: 'inline-block',
+                          width: 'calc(50% - 8px)'
+                        }}
+                      >
+                        <Input placeholder="Input min bathrooms" />
+                      </Form.Item>
+                      <Form.Item
+                        name="maxBathrooms"
+                        label="Max Bathrooms"
+                        rules={[
+                          {
+                            required: false
+                          }
+                        ]}
+                        style={{
+                          display: 'inline-block',
+                          width: 'calc(50% - 8px)',
+                          margin: '0 8px'
+                        }}
+                      >
+                        <Input placeholder="Input max bathrooms" />
+                      </Form.Item>
+                    </Form.Item><Form.Item
+                      name="yearBuilt"
+                      style={{
+                        marginBottom: 0,
+                        display: 'block'
+                      }}
+                    >
+                      <Form.Item
+                        name="minYearBuilt"
+                        label="Min Year Built"
+                        rules={[
+                          {
+                            required: false
+                          }
+                        ]}
+                        style={{
+                          display: 'inline-block',
+                          width: 'calc(50% - 8px)'
+                        }}
+                      >
+                        <Input placeholder="Input min year built" />
+                      </Form.Item>
+                      <Form.Item
+                        name="maxYearBuilt"
+                        label="Max Year Built"
+                        rules={[
+                          {
+                            required: false
+                          }
+                        ]}
+                        style={{
+                          display: 'inline-block',
+                          width: 'calc(50% - 8px)',
+                          margin: '0 8px'
+                        }}
+                      >
+                        <Input placeholder="Input max year built" />
+                      </Form.Item>
+                    </Form.Item></>
+                  )
+                : null
+  }
           </Form.Item>
         </Form>
       </Modal>
