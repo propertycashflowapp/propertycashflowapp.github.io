@@ -59,7 +59,7 @@ const App = () => {
          Property Cash Flow
         </Header>
         <Content >
-          <MainPage userName='steve' userId={123} />
+          {!isLoggedIn ? (<LoginPage setIsLoggedIn={setIsLoggedIn} setUserName={setUserName} setUserId={setUserId} />) : (<MainPage userName={userName} userId={userId} />)}
         </Content>
       </Layout>
     </Layout>
