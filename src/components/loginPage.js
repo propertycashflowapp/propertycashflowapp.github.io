@@ -1,12 +1,15 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { Form, Input, Button, Modal, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import createUser from './ApiCalls/createUser'
 import verifyLogin from './ApiCalls/verifyLogin'
 
+
 function LoginPage (props) {
   // functions for generating messages for login
+  const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage()
   // code for success and failure pop-ups
   const loadingIcon = (message) => {
@@ -18,12 +21,13 @@ function LoginPage (props) {
     // Dismiss manually and asynchronously
     setTimeout(messageApi.destroy, 2500)
   }
-  // const success = (message) => {
-  //   messageApi.open({
-  //     type: 'success',
-  //     content: message
-  //   })
-  // }
+  const success = (message) => {
+    messageApi.open({
+      type: 'success',
+      content: message
+    })
+    navigate("/MainPage")
+  }
 
   const error = (message) => {
     messageApi.open({
@@ -66,6 +70,7 @@ function LoginPage (props) {
         props.setIsLoggedIn(true)
         props.setUserName(values.username)
         props.setUserId(dataId.$oid)
+        success('logged in!')
       }
     } else {
       error('you have entered the wrong password')

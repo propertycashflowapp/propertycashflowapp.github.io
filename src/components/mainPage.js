@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import { Button, Input, Form, Table, Modal, Checkbox } from 'antd'
-
 import GetColumnSearchProps from './GetColumnSearchProps'
 import localListing from './ApiCalls/localListings'
 import saveProperties from './ApiCalls/saveProperties'
@@ -114,7 +113,6 @@ function MainPage (props) {
 
   // Modal functions
   const [open, setOpen] = useState(false)
-
   const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
     const [form] = Form.useForm()
     const onChange = (e) => {
@@ -440,12 +438,6 @@ function MainPage (props) {
       }} >
       <p> Hello {props.userName} </p>
       <p> Your User Id is: {props.userId} </p>
-      {/* <Highlighter
-        highlightClassName="YourHighlightClass"
-        searchWords={["and", "or", "the"]}
-        autoEscape={true}
-        textToHighlight="The dog is chasing the cat. Or perhaps they're just playing?"
-      /> */}
       <Button style= {{ background: 'white', color: 'black', height: 80, width: 200, fontSize: 16, border: '1px solid black' }}
         type="primary"
         onClick={() => {
