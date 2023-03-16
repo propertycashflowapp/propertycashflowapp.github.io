@@ -1,87 +1,84 @@
-import React from 'react';
-import { useState } from 'react';
-import { Form, Input, Button, Modal, message } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons'; 
-import createUser from './ApiCalls/createUser';
-import verifyLogin from './ApiCalls/verifyLogin';
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react'
+import { Form, Input, Button, Modal, message } from 'antd'
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import createUser from './ApiCalls/createUser'
+import verifyLogin from './ApiCalls/verifyLogin'
 
-function LoginPage(props) {
+function LoginPage (props) {
   // functions for generating messages for login
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi, contextHolder] = message.useMessage()
   // code for success and failure pop-ups
   const loadingIcon = (message) => {
     messageApi.open({
       type: 'loading',
       content: message,
-      duration: 0,
-    });
+      duration: 0
+    })
     // Dismiss manually and asynchronously
-    setTimeout(messageApi.destroy, 2500);
-  };
-  const success = (message) => {
-    messageApi.open({
-      type: 'success',
-      content: message,
-    });
-  };
+    setTimeout(messageApi.destroy, 2500)
+  }
+  // const success = (message) => {
+  //   messageApi.open({
+  //     type: 'success',
+  //     content: message
+  //   })
+  // }
 
   const error = (message) => {
     messageApi.open({
       type: 'error',
-      content: message,
-    });
-  };
+      content: message
+    })
+  }
 
   const warning = (message) => {
     messageApi.open({
       type: 'warning',
-      content: message,
-    });
-  };
-
+      content: message
+    })
+  }
 
   // functions for modal opening/closing
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [form] = Form.useForm();
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [form] = Form.useForm()
   const showModal = () => {
-    setIsModalOpen(true);
-  };
+    setIsModalOpen(true)
+  }
   const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+    setIsModalOpen(false)
+  }
 
   const onCreate = async (values) => {
-    var status = await createUser(values);
-    console.log(status);
-  };
+    const status = await createUser(values)
+    console.log(status)
+  }
 
   const onFinish = async values => {
-    loadingIcon("Loggin You In..");
-    const loginResult = await verifyLogin(values);
-    if (loginResult.status === 200){
+    loadingIcon('Loggin You In..')
+    const loginResult = await verifyLogin(values)
+    if (loginResult.status === 200) {
       const data = loginResult.data
-      if (data === null){
-        warning("user not found- check credentials")
+      if (data === null) {
+        warning('user not found- check credentials')
+      } else {
+        const dataId = loginResult.data._id
+        props.setIsLoggedIn(true)
+        props.setUserName(values.username)
+        props.setUserId(dataId.$oid)
       }
-      else {
-        const dataId = loginResult.data._id;
-        props.setIsLoggedIn(true);
-        props.setUserName(values.username);
-        props.setUserId(dataId.$oid);
-      }
-    }
-    else {
-      error("you have entered the wrong password");
+    } else {
+      error('you have entered the wrong password')
     }
   }
   return (
-    <div style={{width: '70%', paddingTop: '5%', paddingLeft: '5%' }}>
+    <div style={{ width: '70%', paddingTop: '5%', paddingLeft: '5%' }}>
     {contextHolder}
     <Form
       name="normal_login"
       className="login-form"
       initialValues={{
-        remember: true,
+        remember: true
       }}
       onFinish={onFinish}
     >
@@ -90,8 +87,8 @@ function LoginPage(props) {
         rules={[
           {
             required: true,
-            message: 'Please input your Username!',
-          },
+            message: 'Please input your Username!'
+          }
         ]}
       >
         <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
@@ -101,8 +98,8 @@ function LoginPage(props) {
         rules={[
           {
             required: true,
-            message: 'Please input your Password!',
-          },
+            message: 'Please input your Password!'
+          }
         ]}
       >
         <Input
@@ -122,25 +119,25 @@ function LoginPage(props) {
       </Button>
       <Modal title="Create Account" open={isModalOpen} onCancel={handleCancel}
           onOk={() => {
-              form
-                .validateFields()
-                .then((values) => {
-                  onCreate(values)
-                  form.resetFields();
-                })
-                .catch((info) => {
-                  console.log('Validate Failed:', info);
-                });
-           
-                setIsModalOpen(false)
-            }}
+            form
+              .validateFields()
+              .then((values) => {
+                onCreate(values)
+                form.resetFields()
+              })
+              .catch((info) => {
+                console.log('Validate Failed:', info)
+              })
+
+            setIsModalOpen(false)
+          }}
             >
         <Form
           form={form}
           layout="vertical"
           name="form_in_modal"
           initialValues={{
-            modifier: 'public',
+            modifier: 'public'
           }}
         >
         <Form.Item
@@ -148,8 +145,8 @@ function LoginPage(props) {
           rules={[
             {
               required: true,
-              message: 'Please input your Full Name!',
-            },
+              message: 'Please input your Full Name!'
+            }
           ]}
         >
           <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Full Name" />
@@ -159,8 +156,8 @@ function LoginPage(props) {
           rules={[
             {
               required: true,
-              message: 'Please input your Email!',
-            },
+              message: 'Please input your Email!'
+            }
           ]}
         >
           <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
@@ -170,8 +167,8 @@ function LoginPage(props) {
           rules={[
             {
               required: true,
-              message: 'Please choose a Password!',
-            },
+              message: 'Please choose a Password!'
+            }
           ]}
         >
           <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Password" />
@@ -181,7 +178,7 @@ function LoginPage(props) {
       </Form.Item>
     </Form>
     </div>
-  );
+  )
 };
 
-export default LoginPage;
+export default LoginPage
