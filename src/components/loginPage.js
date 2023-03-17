@@ -1,15 +1,14 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import { Form, Input, Button, Modal, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import createUser from './ApiCalls/createUser'
 import verifyLogin from './ApiCalls/verifyLogin'
 
-
 function LoginPage (props) {
   // functions for generating messages for login
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage()
   // code for success and failure pop-ups
   const loadingIcon = (message) => {
@@ -26,7 +25,7 @@ function LoginPage (props) {
       type: 'success',
       content: message
     })
-    navigate("/MainPage")
+    navigate('/MainPage')
   }
 
   const error = (message) => {
