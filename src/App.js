@@ -1,40 +1,28 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
+import { BrowserRouter, useNavigate, Routes, Route } from 'react-router-dom'
+import { Layout } from 'antd'
 import MainPage from './components/mainPage.js'
 import LoginPage from './components/loginPage.js'
-import { UserOutlined } from '@ant-design/icons'
-import { Layout, Menu } from 'antd'
-import getSavedProperties from './components/ApiCalls/getSavedProperties.js'
+import MyHeader from './components/MyHeader.js'
+import SavedHouses from './components/SavedHouses.js'
+import MyMenu from './components/MyMenu.js'
 
-const { Header, Content, Sider } = Layout
-function getItem (label, key, icon, children) {
-  return {
-    key,
-    icon,
-    children,
-    label
-  }
-}
-
-const items = [
-  getItem('User', 'sub1', <UserOutlined />, [
-    getItem('Tom', 'tom'),
-    getItem('Bill', 'bill'),
-    getItem('Alex', 'alex')
-  ]),
-  getItem('Saved Properties')
-]
+const { Content, Sider } = Layout
 
 const App = () => {
+  return (
+    <BrowserRouter>
+      <Root />
+    </BrowserRouter>
+  )
+}
+
+function Root () {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userName, setUserName] = useState('')
+  const [housesSaved, setHousesSaved] = useState('')
   const [userId, setUserId] = useState('')
-
-  const openSaved = async () => {
-    console.log('show saved propeties')
-    const houses = await getSavedProperties(userId)
-    console.log('HOUSES: ', houses)
-  }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -46,21 +34,17 @@ const App = () => {
             background: 'rgba(255, 255, 255, 0.2)'
           }}
         />
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={openSaved} />
+        {isLoggedIn ? <MyMenu setHousesSaved={setHousesSaved} userId={userId}/> : <p></p>}
       </Sider>
       <Layout className="site-layout">
-        <Header
-          style={{
-            background: 'white',
-            fontSize: 30,
-            color: 'dark navy',
-            textAlign: 'center'
-          }} >
-         Property Cash Flow
-        </Header>
-        <Content >
-          {!isLoggedIn ? (<LoginPage setIsLoggedIn={setIsLoggedIn} setUserName={setUserName} setUserId={setUserId} />) : (<MainPage userName={userName} userId={userId} />)}
-        </Content>
+        <MyHeader/>
+          <Content>
+            <Routes>
+              <Route path="/" element={<LoginPage setIsLoggedIn={setIsLoggedIn} setUserName={setUserName} setUserId={setUserId} />} exact />
+              <Route path="/MainPage" element={<MainPage setHousesSaved={setHousesSaved} userName={userName} userId={userId} />} />
+              <Route path="/SavedHouses" element={<SavedHouses housesSaved={housesSaved} />} />
+            </Routes>
+          </Content>
       </Layout>
     </Layout>
   )
