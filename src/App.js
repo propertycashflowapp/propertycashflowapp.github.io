@@ -8,17 +8,17 @@ import MyHeader from './components/MyHeader.js'
 import SavedHouses from './components/SavedHouses.js'
 import MyMenu from './components/MyMenu.js'
 
-const {Content, Sider } = Layout
+const { Content, Sider } = Layout
 
 const App = () => {
   return (
     <BrowserRouter>
       <Root />
     </BrowserRouter>
-  );
+  )
 }
 
-function Root() {
+function Root () {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userName, setUserName] = useState('')
   const [housesSaved, setHousesSaved] = useState('')
@@ -34,7 +34,7 @@ function Root() {
             background: 'rgba(255, 255, 255, 0.2)'
           }}
         />
-        {isLoggedIn? <MyMenu setHousesSaved={setHousesSaved} userId={userId}/> : <p></p>}
+        {isLoggedIn ? <MyMenu setHousesSaved={setHousesSaved} userId={userId}/> : <p></p>}
       </Sider>
       <Layout className="site-layout">
         <MyHeader/>

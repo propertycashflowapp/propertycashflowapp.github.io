@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react'
 
-function SavedHouses(props) {
-
+function SavedHouses (props) {
   const DisplayHouses = () => {
     // all_houses = props.housesSaved
     // for x in all_houses
